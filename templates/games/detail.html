@@ -1,0 +1,181 @@
+{% extends 'layout.html' %}
+{% load static i18n %}
+
+{% block content %}
+<div class="relative isolate px-6 pt-10 lg:px-8">
+    
+    <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
+        <div class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-orange-500 to-gray-900 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"></div>
+    </div>
+
+    <div class="mx-auto max-w-7xl">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold tracking-tight text-white sm:text-5xl mb-4">
+                {{ game.name }}
+            </h1>
+            
+            {% if latest_version %}
+                <span class="inline-flex items-center rounded-md bg-gray-800 px-2 py-1 text-xs font-medium text-orange-400 ring-1 ring-inset ring-orange-400/30 mb-4">
+                    v{{ latest_version.version }}
+                </span>
+            {% endif %}
+
+            <p class="mt-4 text-lg leading-8 text-gray-300 max-w-2xl mx-auto">
+                {{ game.description|default:_("No description available.") }}
+            </p>
+        </div>
+
+        <div class="relative w-full max-w-5xl mx-auto bg-black rounded-xl border border-gray-700 shadow-2xl overflow-hidden aspect-video ring-1 ring-white/10">
+            
+            {% if latest_version and latest_version.wasm_file %}
+                <canvas id="glcanvas" tabindex='1' class="w-full h-full block focus:outline-none bg-black"></canvas>
+
+                <div id="game-overlay" class="absolute inset-0 bg-gray-900/90 flex flex-col items-center justify-center z-10 transition-opacity duration-500">
+                    
+                    <div class="text-center">
+                        <div class="mb-6 rounded-full bg-gray-800 p-4 inline-block ring-1 ring-white/10 shadow-lg">
+                            <svg class="w-12 h-12 text-orange-500 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8 5v14l11-7z"/>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold text-white mb-2">{% trans "Ready to Play?" %}</h3>
+                        <p class="text-gray-400 mb-8">{% trans "Click below to initialize the WebAssembly runtime." %}</p>
+
+                        <button onclick="startGame('{{ latest_version.wasm_file.url }}')" 
+                                class="rounded-md bg-orange-600 px-8 py-3.5 text-sm font-bold text-white shadow-lg hover:bg-orange-500 hover:shadow-orange-500/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600 transition transform hover:-translate-y-0.5">
+                            {% trans "Launch Game" %}
+                        </button>
+                    </div>
+
+                    <div class="absolute bottom-6 text-xs text-gray-600 uppercase tracking-widest font-mono">
+                        Running on Fantasy Craft • WASM
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="absolute inset-0 bg-gray-900 flex flex-col items-center justify-center">
+                    <svg class="w-16 h-16 text-gray-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                    </svg>
+                    <p class="text-gray-500 font-medium">{% trans "No playable version uploaded yet." %}</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="max-w-5xl mx-auto mt-4 flex justify-between items-center px-2">
+            <div class="text-sm text-gray-500 font-mono">
+                ID: <span class="text-gray-400">{{ game.id }}</span>
+            </div>
+            
+            <button onclick="toggleFullscreen()" class="flex items-center gap-2 text-sm text-gray-400 hover:text-white transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                </svg>
+                {% trans "Fullscreen" %}
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<script src="{% static 'js/mq_js_bundle.js' %}"></script>
+<script>
+    // 1. Calculate Base URL
+    const FULL_WASM_URL = "{{ latest_version.wasm_file.url }}";
+    let ASSET_BASE_URL = "";
+    
+    if (FULL_WASM_URL) {
+        ASSET_BASE_URL = FULL_WASM_URL.substring(0, FULL_WASM_URL.lastIndexOf('/') + 1);
+    }
+    
+    console.log("BASE URL JS:", ASSET_BASE_URL);
+
+    // 2. Define the Plugin
+    var PathPlugin = {
+        name: "custom_path_plugin",
+        version: 1,
+        register_plugin: function (importObject) {
+            // A. Base URL function
+            importObject.env.js_get_base_url = function(ptr, cap) {
+                var url = ASSET_BASE_URL || "";
+                var encoder = new TextEncoder();
+                var bytes = encoder.encode(url);
+                var memory = new Uint8Array(wasm_memory.buffer);
+
+                var len = Math.min(bytes.length, cap);
+                for (var i = 0; i < len; i++) {
+                    memory[ptr + i] = bytes[i];
+                }
+                return len;
+            }
+
+            // B. PATCH: Silence WebGL2 warnings (Bad target 0x8ca8/0x8ca9)
+            // We intercept the call to glBindFramebuffer.
+            // If Rust asks for READ_FRAMEBUFFER or DRAW_FRAMEBUFFER (WebGL2 only),
+            // we force it to FRAMEBUFFER (WebGL1 compatible).
+            const original_glBindFramebuffer = importObject.env.glBindFramebuffer;
+            importObject.env.glBindFramebuffer = function(target, fb_id) {
+                if (target === 36008 || target === 36009) { // 0x8CA8, 0x8CA9
+                    target = 36160; // 0x8D40 (GL_FRAMEBUFFER)
+                }
+                original_glBindFramebuffer(target, fb_id);
+            }
+
+            // C. PATCH: Missing functions stubs
+            if (!importObject.env.glCheckFramebufferStatus) {
+                console.warn("Patching missing glCheckFramebufferStatus...");
+                importObject.env.glCheckFramebufferStatus = function(target) {
+                    if (typeof gl !== 'undefined') {
+                        return gl.checkFramebufferStatus(target);
+                    }
+                    return 36053; // FRAMEBUFFER_COMPLETE
+                };
+            }
+
+            if (!importObject.env.glReadBuffer) {
+                importObject.env.glReadBuffer = function(mode) {};
+            }
+
+            if (!importObject.env.glBlitFramebuffer) {
+                importObject.env.glBlitFramebuffer = function(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter) {};
+            }
+        }
+    };
+
+    // 3. Register Plugin
+    if (typeof miniquad_add_plugin === "function") {
+        miniquad_add_plugin(PathPlugin);
+    } else {
+        console.error("Error: mq_js_bundle.js not loaded.");
+    }
+
+    // 4. Start Game
+    function startGame(url) {
+        const overlay = document.getElementById('game-overlay');
+        const canvas = document.getElementById('glcanvas');
+        
+        if(overlay) overlay.classList.add('opacity-0', 'pointer-events-none');
+        canvas.focus();
+
+        console.log("Loading WASM from:", url);
+        
+        if (typeof load === 'function') {
+            load(url);
+        }
+    }
+    
+    function toggleFullscreen() {
+        const canvas = document.getElementById('glcanvas');
+        if (!document.fullscreenElement) {
+            canvas.requestFullscreen().catch(err => {
+                console.error(err);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+</script>
+
+{% endblock %}

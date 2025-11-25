@@ -30,6 +30,7 @@ CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(" ")
 INSTALLED_APPS = [
     'authentication',
     'public',
+    'games',
 
     'rosetta',
     'unfold',
@@ -212,6 +213,28 @@ UNFOLD = {
                         "link": reverse_lazy("admin:authentication_groupproxy_changelist"),
                     },
                 ],
+            },
+            {
+                "title": _("Games"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("Games"),
+                        "icon": "stadia_controller",
+                        "link": reverse_lazy("admin:games_game_changelist")
+                    },
+                    {
+                        "title": _("Game Versions"),
+                        "icon": "commit",
+                        "link": reverse_lazy("admin:games_gameversion_changelist")
+                    },
+                    {
+                        "title": _("Asset Files"),
+                        "icon": "videogame_asset",
+                        "link": reverse_lazy("admin:games_assetfile_changelist")
+                    }
+                ]
             },
             {
                 "title": _("System"),
