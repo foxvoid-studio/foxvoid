@@ -13,7 +13,7 @@ class AssetFileInline(TabularInline):
 
 @admin.register(Game)
 class GameAdmin(ModelAdmin, TranslationAdmin):
-    list_display = ["name", "description"]
+    list_display = ["name", "creator", "description"]
 
 
 @admin.register(GameVersion)

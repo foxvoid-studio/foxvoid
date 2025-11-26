@@ -5,6 +5,7 @@ from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext as _
 from django.utils.text import slugify
+from authentication.models import User
 
 
 def game_wasm_directory_path(instance: 'GameVersion', filename: str):
@@ -13,10 +14,17 @@ def game_wasm_directory_path(instance: 'GameVersion', filename: str):
     return f"games/{safe_game_name}/wasm/{filename}"
 
 
+def game_cover_directory_path(instance: 'Game', filename: str):
+    safe_game_name = slugify(instance.name)
+    return f"games/{safe_game_name}/cover/{filename}"
+
+
 class Game(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(verbose_name=_("name"), max_length=255)
     description = models.TextField(verbose_name=_("description"), null=True, blank=True)
+    cover_image = models.ImageField(upload_to=game_cover_directory_path, null=True, blank=True, verbose_name=_("cover image"))
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="created_games", verbose_name=_("creator"))
     latest = models.ForeignKey('GameVersion', on_delete=models.SET_NULL, blank=True, null=True, related_name="latest")
 
     def clean(self):
