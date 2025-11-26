@@ -128,30 +128,30 @@
                 </div>
                 
                 <div class="p-4 overflow-x-auto">
-                    <pre class="text-sm font-mono leading-relaxed text-gray-300"><code><span class="text-purple-400">use</span> fantasy_craft::prelude::*;
+    <pre class="text-sm font-mono leading-relaxed text-gray-300"><code><span class="text-purple-400">use</span> macroquad::prelude::*;
+<span class="text-purple-400">use</span> fantasy_craft::prelude::*;
 
-<span class="text-gray-500">// Define a component</span>
-<span class="text-blue-400">#[derive(Component)]</span>
-<span class="text-purple-400">struct</span> <span class="text-yellow-300">Player</span> {
-    speed: <span class="text-purple-400">f32</span>,
+<span class="text-purple-400">fn</span> <span class="text-blue-400">window_conf</span>() -> <span class="text-yellow-300">Conf</span> {
+    <span class="text-yellow-300">Conf</span> {
+        window_title: <span class="text-green-400">"Fantasy Craft"</span>.<span class="text-blue-400">to_owned</span>(),
+        window_width: <span class="text-orange-400">1920</span>,
+        window_height: <span class="text-orange-400">1080</span>,
+        ..<span class="text-yellow-300">Default</span>::<span class="text-blue-400">default</span>()
+    }
 }
 
-<span class="text-blue-400">#[fantasy_main]</span>
+<span class="text-gray-500">// Entry point macro</span>
+<span class="text-blue-400">#[macroquad::main(window_conf)]</span>
 <span class="text-purple-400">async fn</span> <span class="text-blue-400">main</span>() {
-    <span class="text-purple-400">let mut</span> world = World::<span class="text-blue-400">new</span>();
-    
-    world.<span class="text-blue-400">spawn</span>((
-        Player { speed: <span class="text-orange-400">10.0</span> },
-        Transform::<span class="text-blue-400">from_xyz</span>(<span class="text-orange-400">0.0</span>, <span class="text-orange-400">5.0</span>, <span class="text-orange-400">0.0</span>),
-        Sprite::<span class="text-blue-400">load</span>(<span class="text-green-400">"hero.png"</span>).<span class="text-purple-400">await</span>,
-    ));
+    <span class="text-purple-400">let mut</span> app = <span class="text-yellow-300">App</span>::<span class="text-blue-400">new</span>(<span class="text-blue-400">window_conf</span>());
+
+    app.<span class="text-blue-400">with_splash_screen_enabled</span>(<span class="text-purple-400">true</span>);
 
     <span class="text-gray-500">// Start the game loop</span>
-    Engine::<span class="text-blue-400">run</span>(world).<span class="text-purple-400">await</span>;
+    app.<span class="text-blue-400">run</span>().<span class="text-purple-400">await</span>
 }</code></pre>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
