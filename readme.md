@@ -134,5 +134,7 @@ This software is free to use for personal or educational purposes. Commercial Re
 
 For a commercial, non-copyleft license (to run a private fork without sharing code), please contact contact@foxvoid.com.
 
-### 🤝 Related Projects
+---
+
+## 🤝 Related Projects
 - [Fantasy Craft](https://github.com/ikigami0513/fantasy_craft)
