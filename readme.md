@@ -10,11 +10,7 @@
 
 **Foxvoid** is a monolithic Django application designed to serve as the central hub for the Fantasy Craft game engine. It handles user authentication, game distribution (WASM), cloud telemetry, and provides a community platform for developers.
 
-## 📄 Licensing: Foxvoid Platform is strictly licensed under the GNU AGPLv3.
-
-This software is free to use for personal or educational purposes. Commercial Restriction: If you use this software to provide a SaaS (Software-as-a-Service) product that competes with Foxvoid Studio, you must release your entire source code under the AGPLv3.
-
-For a commercial, non-copyleft license (to run a private fork without sharing code), please contact contact@foxvoid.com.
+---
 
 ## ✨ Key Features
 
@@ -32,6 +28,8 @@ For a commercial, non-copyleft license (to run a private fork without sharing co
 * **Developer Experience:**
     * Debug Toolbar configured for local development.
 
+---
+
 ## 🛠️ Tech Stack
 
 * **Backend:** Django 5.x, Python 3.12+
@@ -40,6 +38,8 @@ For a commercial, non-copyleft license (to run a private fork without sharing co
 * **Utilities:**
     * `django-modeltranslation` (DB Translation)
     * `django-rosetta` (Translation UI)
+
+---
 
 ## 🚀 Getting Started
 
@@ -125,6 +125,14 @@ python manage.py makemessages -l fr
 ```
 python manage.py compilemessages
 ```
+
+---
+
+## 📄 Licensing: Foxvoid Platform is strictly licensed under the GNU AGPLv3.
+
+This software is free to use for personal or educational purposes. Commercial Restriction: If you use this software to provide a SaaS (Software-as-a-Service) product that competes with Foxvoid Studio, you must release your entire source code under the AGPLv3.
+
+For a commercial, non-copyleft license (to run a private fork without sharing code), please contact contact@foxvoid.com.
 
 ### 🤝 Related Projects
 - [Fantasy Craft](https://github.com/ikigami0513/fantasy_craft)
