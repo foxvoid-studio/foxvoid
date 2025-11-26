@@ -10,6 +10,12 @@
 
 **Foxvoid** is a monolithic Django application designed to serve as the central hub for the Fantasy Craft game engine. It handles user authentication, game distribution (WASM), cloud telemetry, and provides a community platform for developers.
 
+## 📄 Licensing: Foxvoid Platform is strictly licensed under the GNU AGPLv3.
+
+This software is free to use for personal or educational purposes. Commercial Restriction: If you use this software to provide a SaaS (Software-as-a-Service) product that competes with Foxvoid Studio, you must release your entire source code under the AGPLv3.
+
+For a commercial, non-copyleft license (to run a private fork without sharing code), please contact contact@foxvoid.com.
+
 ## ✨ Key Features
 
 * **Modern Admin UI:** Powered by **[Django Unfold](https://github.com/unfoldadmin/django-unfold)**, offering a clean, Tailwind-based interface for management.
