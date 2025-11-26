@@ -4,6 +4,8 @@
 
 ![Foxvoid Banner](https://placehold.co/1200x300/1a1a1a/ff6b00?text=Foxvoid+Platform&font=montserrat)
 
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+
 [![Django](https://img.shields.io/badge/Django-5.0-092E20?logo=django&logoColor=white)](https://www.djangoproject.com/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC?logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Python](https://img.shields.io/badge/Python-3.12-3670A0?logo=python&logoColor=white)](https://www.python.org/)
