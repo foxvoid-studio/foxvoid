@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'theme',
     'constance',
     'constance.backends.database',
+    'rest_framework',
+    'rest_framework.authtoken',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -271,6 +273,12 @@ TAILWIND_APP_NAME = 'theme'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+LOGIN_REDIRECT_URL = reverse_lazy("public:index_view")
+
+LOGOUT_REDIRECT_URL = reverse_lazy("logout_view")
+
+LOGIN_URL = reverse_lazy("login_view")
 
 if DEBUG:
     import socket

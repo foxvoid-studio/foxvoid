@@ -1,5 +1,8 @@
-import uuid, os
+import os
+import uuid
+import datetime
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, Group
 from django.utils.translation import gettext as _
 from django_countries.fields import CountryField
@@ -37,3 +40,17 @@ class GroupProxy(Group):
         app_label = 'authentication'
         verbose_name = Group._meta.verbose_name
         verbose_name_plural = Group._meta.verbose_name_plural
+
+
+class DeviceLoginRequest(models.Model):
+    """
+    Stores temporary login requests from the Launcher.
+    """
+    device_code = models.UUIDField(default=uuid.uuid4, unique_for_month=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    is_approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # Valid only for 5 minutes
+    def is_expired(self):
+        return self.created_at < timezone.now() - datetime.timedelta(minutes=5)

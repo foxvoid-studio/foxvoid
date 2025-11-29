@@ -19,6 +19,7 @@ django-debug-toolbar = "^6.1.0"
 django-tailwind = {extras = ["reload"], version = "^4.4.1"}
 django-rosetta = "^0.10.2"
 django-constance = "^4.3.4"
+djangorestframework = "^3.16.1"
 
 
 [build-system]

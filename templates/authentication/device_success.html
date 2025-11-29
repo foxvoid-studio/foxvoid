@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-[80vh] lg:py-0">
+    
+    <div class="w-full bg-gray-800 rounded-lg shadow border border-gray-700 md:mt-0 sm:max-w-md xl:p-0">
+        <div class="p-6 space-y-6 sm:p-8 text-center">
+            
+            <!-- Success Animation/Icon -->
+            <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-900/50 animate-bounce">
+                <svg class="h-8 w-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                </svg>
+            </div>
+
+            <h1 class="text-2xl font-bold text-white">
+                {% trans "All Set!" %}
+            </h1>
+
+            <div class="text-gray-300">
+                <p class="mb-4">{% trans "You have successfully connected the Foxvoid Launcher." %}</p>
+                <p class="text-sm text-gray-500">{% trans "You can now close this window and return to the application." %}</p>
+            </div>
+
+            <!-- Optional: Link to close window (JS) or go home -->
+            <div class="pt-4">
+                <a href="/" class="text-orange-500 hover:text-orange-400 hover:underline text-sm">
+                    {% trans "Go to Dashboard" %} &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

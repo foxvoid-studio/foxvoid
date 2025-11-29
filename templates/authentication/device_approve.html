@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-[80vh] lg:py-0">
+    
+    <div class="w-full bg-gray-800 rounded-lg shadow border border-gray-700 md:mt-0 sm:max-w-md xl:p-0">
+        <div class="p-6 space-y-4 md:space-y-6 sm:p-8 text-center">
+            
+            <!-- Icon / Graphic -->
+            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-orange-900/50">
+                <svg class="h-6 w-6 text-orange-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                </svg>
+            </div>
+
+            <h1 class="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl">
+                {% trans "Connect Foxvoid Launcher" %}
+            </h1>
+
+            <p class="text-gray-400 text-sm">
+                {% trans "The Foxvoid Launcher is requesting access to your account." %}
+                <br>
+                {% trans "Please confirm the code below matches the one on your device:" %}
+            </p>
+
+            <!-- Code Display -->
+            <div class="py-4">
+                <span class="font-mono text-3xl font-bold tracking-widest text-orange-500 select-all bg-gray-900 px-4 py-2 rounded border border-gray-600">
+                    {{ device_code|slice:":8" }}... <!-- Displaying full UUID might be too long, styling preference -->
+                </span>
+                <p class="text-xs text-gray-500 mt-2">ID: {{ device_code }}</p>
+            </div>
+
+            <!-- Action Buttons -->
+            <form method="post" class="space-y-3">
+                {% csrf_token %}
+                
+                <button type="submit" class="w-full text-white bg-orange-600 hover:bg-orange-700 focus:ring-4 focus:outline-none focus:ring-orange-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition shadow-lg shadow-orange-900/30">
+                    {% trans "Approve Access" %}
+                </button>
+
+                <a href="/" class="block w-full text-gray-400 bg-transparent hover:bg-gray-700 border border-gray-600 focus:ring-4 focus:outline-none focus:ring-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition">
+                    {% trans "Cancel" %}
+                </a>
+            </form>
+
+            <p class="text-xs text-gray-500 mt-4">
+                {% trans "If you did not request this, you can safely ignore this page." %}
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
